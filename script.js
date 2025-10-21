@@ -1,3 +1,6 @@
+document.addEventListener("DOMContentLoaded", () => {
+
+
 function getComputerChoice() {
     let randomNumber = Math.random();
     
@@ -11,56 +14,100 @@ function getComputerChoice() {
  
 }
 
-console.log(getComputerChoice());
+let roundCount = 0;
+const maxRounds = 5;
 
-function getHumanChoice() {
-    let userInput= prompt ("Rock, Paper or Scissors?");
-    return userInput;
-}
+const resultText = document.getElementById("result");
+const scoreText = document.getElementById("score");
+const buttons = document.querySelectorAll("button");
 
 
-const humanChoice = getHumanChoice();
-const computerChoice = getComputerChoice();
+buttons.forEach(button => {
+        button.style.backgroundColor = "pink";
+        button.style.width = "200px";
+        button.style.height = "70px";
 
-function playGame (){
+    button.addEventListener("click", () => {
+        const humanChoice = button.id;
+        const computerChoice = getComputerChoice();
+
+        playRound(humanChoice, computerChoice);
+    })
+})
+
+
 let humanScore = 0;
 let computerScore = 0;
 
 function playRound (humanChoice, computerChoice) {
+    console.log("Runde gespielt:", roundCount + 1);
+
     humanChoice = humanChoice.toLowerCase();
+    let message = "";
 
     if (humanChoice === computerChoice) {
-        console.log("Tie!");
+    message = `Both choose ${humanChoice} - it's a tie!`;
     } else if (
         (humanChoice === "rock" && computerChoice === "scissors") ||
         (humanChoice === "paper" && computerChoice === "rock") ||
         (humanChoice === "scissors" && computerChoice === "paper")
         ) {
-            console.log("Congrats! You win :)");
+            message = "Congrats! You win :)";
             humanScore++;
     } else {
-        console.log("Nooo! You loose :(")
+            message = "Noooo! You loose :(";
             computerScore++;
+    }
+
+    roundCount++;
+    resultText.innerHTML = message;
+    scoreText.textContent = `Score: You ${humanScore} - ${computerScore} Computer`;
+
+    if (roundCount === maxRounds) {
+        showFinalResult();
     }
 }
 
-playRound(getHumanChoice(), getComputerChoice());
-playRound(getHumanChoice(), getComputerChoice());
-playRound(getHumanChoice(), getComputerChoice());
-playRound(getHumanChoice(), getComputerChoice());
-playRound(getHumanChoice(), getComputerChoice());
 
-console.log(`Final score: Human ${humanScore} - Computer ${computerScore}`);
-
+function showFinalResult () {
+    let finalMessage = "";
 if (humanScore > computerScore) {
-    console.log("Yeah! You won!");
+    finalMessage = "Yeah! You won!";
 } else if (humanScore < computerScore) {
-    console.log("Noo. You lost!");
+    finalMessage = "Noo. You lost!";
 } else {
-    console.log("That's a tie.");
+    finalMessage = "That's a tie.";
+}
+
+resultText.innerHTML = finalMessage;
+resultText.style.fontSize = "40px";
+resultText.style.fontWeight= "bold"; 
+resultText.style.color ="red";
+
+scoreText.textContent = `Final Score: You ${humanScore} - ${computerScore} Computer`
+
+buttons.forEach(button => button.disabled = true);
+
+showRetryButton();
+
+}
+
+function showRetryButton() {
+    const retryButton = document.createElement("button"); // neuen Button erstellen
+    retryButton.textContent = "Wanna try again?";
+    retryButton.style.fontSize = "20px";
+    retryButton.style.marginTop = "20px";
+    retryButton.style.padding = "10px 20px";
+    retryButton.style.cursor = "pointer";
+
+    // Klick-Event: Seite neu laden
+    retryButton.addEventListener("click", () => {
+        location.reload();
+    });
+
+    // Button ans Ende des Body oder in ein Container-Element setzen
+    document.body.appendChild(retryButton);
+
 }
 }
-
-
-playGame();
-
+)
